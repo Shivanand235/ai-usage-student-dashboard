@@ -1,0 +1,11 @@
+Removed 12 exact duplicate rows; 288 rows remain.
+Age: converted text values to numbers; missing after conversion: 23.
+Monthly_Income: converted text values to numbers; missing after conversion: 10.
+Monthly_AI_Cost: converted text values to numbers; missing after conversion: 12.
+AI_Usage_Hours_Per_Day: converted text values to numbers; missing after conversion: 7.
+Time_Saved_Hours_Per_Week: converted text values to numbers; missing after conversion: 10.
+Work_or_Study_Hours_Per_Day: converted text values to numbers; missing after conversion: 9.
+Age: set 2 implausible value(s) to blank.
+AI_Usage_Hours_Per_Day: set 1 implausible value(s) to blank.
+Work_or_Study_Hours_Per_Day: set 1 implausible value(s) to blank.
+Monthly_Income: set 1 implausible value(s) to blank.

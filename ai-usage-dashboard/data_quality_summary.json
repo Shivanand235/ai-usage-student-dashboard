@@ -1,0 +1,32 @@
+{
+  "raw_rows": 300,
+  "raw_columns": 19,
+  "exact_duplicates": 12,
+  "clean_rows": 288,
+  "unique_user_ids": 288,
+  "missing_by_column": {
+    "User_ID": 0,
+    "Age": 25,
+    "Gender": 10,
+    "Country": 10,
+    "User_Type": 0,
+    "Education_Level": 12,
+    "Profession": 14,
+    "Monthly_Income": 11,
+    "AI_Tool": 10,
+    "AI_Purpose": 13,
+    "AI_Usage_Hours_Per_Day": 8,
+    "Tasks_Performed": 17,
+    "Monthly_AI_Cost": 12,
+    "Productivity_Score": 14,
+    "Accuracy_Rating": 14,
+    "Satisfaction_Score": 7,
+    "Time_Saved_Hours_Per_Week": 10,
+    "Work_or_Study_Hours_Per_Day": 10,
+    "Would_Recommend": 5,
+    "Age_Group": 25,
+    "Usage_Band": 8,
+    "Paid_User": 0,
+    "Income_Band": 11
+  }
+}
