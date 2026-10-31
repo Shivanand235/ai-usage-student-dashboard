@@ -1,660 +1,168 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Usage & Impact Dashboard</title>
-
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
 <style>
-:root {
-  --navy: #12343b;
-  --teal: #087f8c;
-  --muted: #68777c;
-  --line: #e3e9e9;
-  --bg: #f4f7f6;
-  --white: #fff;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: #1b2b30;
-  font: 15px Arial, sans-serif;
-}
-
-header {
-  background: var(--navy);
-  color: white;
-  padding: 34px max(20px, calc((100% - 1200px) / 2));
-}
-
-h1 {
-  margin: 0;
-  font-size: clamp(28px, 4vw, 42px);
-}
-
-header p {
-  color: #c9d9db;
-  margin: 10px 0 0;
-}
-
-main {
-  max-width: 1200px;
-  margin: 24px auto;
-  padding: 0 18px 35px;
-}
-
-.panel, .kpi, .chart {
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  box-shadow: 0 5px 20px #173b430b;
-}
-
-.upload {
-  padding: 18px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.upload input { max-width: 100%; }
-
-.hint {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.filters {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  padding: 16px;
-  margin-top: 15px;
-}
-
-label {
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: bold;
-}
-
-select, input {
-  display: block;
-  margin-top: 7px;
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: white;
-  color: #20343a;
-}
-
-button {
-  padding: 10px 14px;
-  border: 0;
-  border-radius: 8px;
-  background: var(--teal);
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.kpis {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin: 18px 0;
-}
-
-.kpi { padding: 17px; }
-
-.kpi small { color: var(--muted); }
-
-.kpi strong {
-  display: block;
-  font-size: 26px;
-  margin-top: 9px;
-  color: var(--navy);
-}
-
-h2 {
-  font-size: 20px;
-  margin: 28px 0 13px;
-}
-
-.charts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-}
-
-.chart {
-  padding: 16px;
-  min-height: 320px;
-}
-
-.chart h3 {
-  font-size: 15px;
-  margin: 0 0 10px;
-}
-
-.canvas { height: 255px; }
-
-.tablebox {
-  overflow: auto;
-  max-height: 440px;
-}
-
-.tablepanel {
-  padding: 17px;
-  margin-top: 18px;
-}
-
-table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid var(--line);
-  text-align: left;
-}
-
-th {
-  background: #edf4f3;
-  position: sticky;
-  top: 0;
-}
-
-#status {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-@media(max-width:760px) {
-  .filters { grid-template-columns: repeat(2, 1fr); }
-  .kpis { grid-template-columns: repeat(2, 1fr); }
-  .charts { grid-template-columns: 1fr; }
-}
-
-@media(max-width:420px) {
-  .filters { grid-template-columns: 1fr; }
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <h1>AI Usage & Impact</h1>
-  <p>Interactive survey dashboard · Students and professionals</p>
-</header>
-
+:root{--navy:#12343b;--teal:#087f8c;--bg:#f3f7f7;--line:#dfe8e8;--muted:#63777c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px Arial,sans-serif;color:#20343a}
+header{background:linear-gradient(120deg,#12343b,#17636b);color:#fff;padding:28px max(18px,calc((100% - 1300px)/2))}
+h1{margin:0;font-size:32px}header p{color:#d3e4e5;margin-bottom:0}
+main{max-width:1300px;margin:22px auto;padding:0 16px 35px}
+.panel,.kpi,.chart{background:white;border:1px solid var(--line);border-radius:13px;box-shadow:0 3px 14px #12343b0a}
+.panel{padding:17px;margin-bottom:16px}.filters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+label{display:block;font-size:12px;font-weight:bold;color:var(--muted)}select,input{width:100%;padding:10px;margin-top:7px;border:1px solid var(--line);border-radius:8px;background:white}
+button{padding:10px 14px;border:0;border-radius:8px;background:var(--teal);color:#fff;font-weight:bold;cursor:pointer;margin-top:12px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0 22px}
+.kpi{padding:16px}.kpi small{color:var(--muted)}.kpi strong{display:block;font-size:26px;color:var(--navy);margin:9px 0 4px}.kpi span{font-size:12px;color:var(--muted)}
+h2{font-size:20px;margin:24px 0 12px}.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.chart{padding:15px;min-width:0}.chart h3{font-size:15px;margin:0 0 10px}.canvas{height:275px;position:relative}.wide{grid-column:1/-1}
+.tablebox{overflow:auto;max-height:440px}table{border-collapse:collapse;width:100%;min-width:900px;font-size:12px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;max-width:360px}td{white-space:normal}th{position:sticky;top:0;background:#eaf3f3}
+#status,.note{color:var(--muted);font-size:12px}
+@media(max-width:800px){.filters,.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.charts{grid-template-columns:1fr}.wide{grid-column:auto}}
+@media(max-width:450px){.filters,.kpis{grid-template-columns:1fr}h1{font-size:26px}}
+</style></head><body>
+<header><h1>AI Usage &amp; Impact Dashboard</h1><p>Survey KPIs and charts specified in the task list.</p></header>
 <main>
-
-<section class="panel upload">
-  <div>
-    <b>Load your survey CSV</b>
-    <div class="hint">
-      Survey data loads automatically. You can also upload a CSV manually.
-    </div>
-  </div>
-
-  <input id="file" type="file" accept=".csv,text/csv">
-  <span id="status">Loading dashboard data...</span>
+<section class="panel"><h2 style="margin-top:0">Interactive Slicers</h2>
+<div class="filters">
+<label>User Type<select id="fUser"><option value="">All user types</option></select></label>
+<label>Country<select id="fCountry"><option value="">All countries</option></select></label>
+<label>AI Tool<select id="fTool"><option value="">All AI tools</option></select></label>
+<label>Age Group<select id="fAge"><option value="">All age groups</option></select></label>
+<label>Education Level<select id="fEducation"><option value="">All education levels</option></select></label>
+<label>Chart Color Theme<select id="colorTheme"><option value="teal">Teal & Coral</option><option value="ocean">Ocean Blue</option><option value="vibrant">Vibrant</option><option value="sunset">Sunset</option><option value="earth">Earth Tones</option></select></label>
+</div><button id="reset">Reset all slicers</button><p id="status">Loading survey data…</p>
 </section>
-
-<section class="panel filters">
-  <label>
-    User type
-    <select id="fUser">
-      <option value="">All user types</option>
-    </select>
-  </label>
-
-  <label>
-    Country
-    <select id="fCountry">
-      <option value="">All countries</option>
-    </select>
-  </label>
-
-  <label>
-    AI tool
-    <select id="fTool">
-      <option value="">All tools</option>
-    </select>
-  </label>
-
-  <label>
-    Age group
-    <select id="fAge">
-      <option value="">All ages</option>
-    </select>
-  </label>
-</section>
-
-<section class="kpis" id="kpis">
-  <div class="kpi"><small>Respondents</small><strong>—</strong></div>
-  <div class="kpi"><small>Avg. daily AI use</small><strong>—</strong></div>
-  <div class="kpi"><small>Avg. productivity</small><strong>—</strong></div>
-  <div class="kpi"><small>Avg. satisfaction</small><strong>—</strong></div>
-</section>
-
-<h2>Usage patterns & outcomes</h2>
-
-<section class="charts" id="charts">
-  <div class="chart"><h3>AI tools used</h3><div class="canvas"></div></div>
-  <div class="chart"><h3>Main AI purposes</h3><div class="canvas"></div></div>
-</section>
-
-<section class="panel tablepanel">
-  <h2>Survey responses</h2>
-  <input
-    id="search"
-    placeholder="Search responses..."
-    style="max-width:320px;margin:0 0 12px"
-  >
-
-  <div class="tablebox">
-    <table>
-      <thead id="thead"></thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
-</section>
+<h2>Key Performance Indicators</h2><section class="kpis" id="kpis"></section>
+<h2>Required Charts</h2><section class="charts" id="charts"></section>
+<section class="panel" style="margin-top:18px"><h2 style="margin-top:0">Survey Responses</h2><input id="search" placeholder="Search all response fields…" style="max-width:420px"><p id="tableCount" class="note"></p><div class="tablebox"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div></section>
 
 </main>
-
 <script>
-(() => {
-
-  let all = [];
-  let charts = [];
-
-  const $ = id => document.getElementById(id);
-
-  const aliases = {
-    user: ['User_Type', 'User Type', 'User type'],
-    country: ['Country'],
-    tool: ['AI_Tool', 'AI Tool', 'AI tool'],
-    age: ['Age_Group', 'Age Group', 'Age group'],
-    ageNum: ['Age'],
-    usage: [
-      'AI_Usage_Hours_Per_Day',
-      'AI Usage Hours Per Day',
-      'AI Usage Hours/Day'
-    ],
-    productivity: ['Productivity_Score', 'Productivity Score'],
-    satisfaction: ['Satisfaction_Score', 'Satisfaction Score'],
-    purpose: ['AI_Purpose', 'AI Purpose'],
-    time: ['Time_Saved_Hours_Per_Week', 'Time Saved Hours Per Week'],
-    recommend: ['Would_Recommend', 'Would Recommend']
-  };
-
-  function key(row, kind) {
-    const keys = aliases[kind] || [];
-    return keys.find(k =>
-      Object.prototype.hasOwnProperty.call(row, k)
-    ) || '';
-  }
-
-  function num(row, kind) {
-    const column = key(row, kind);
-    if (!column) return null;
-
-    const raw = String(row[column] ?? '').trim();
-    if (!raw) return null;
-
-    const value = Number(raw.replace(/[^0-9.-]/g, ''));
-
-    return Number.isFinite(value) ? value : null;
-  }
-
-  function avg(rows, kind) {
-    const values = rows
-      .map(row => num(row, kind))
-      .filter(value => value !== null);
-
-    if (!values.length) return null;
-
-    return values.reduce((sum, value) => sum + value, 0) / values.length;
-  }
-
-  function label(row, kind) {
-    const column = key(row, kind);
-
-    if (!column) return 'Not stated';
-
-    return String(row[column] ?? '').trim() || 'Not stated';
-  }
-
-  function group(rows, kind) {
-    const counts = {};
-
-    rows.forEach(row => {
-      const value = label(row, kind);
-      counts[value] = (counts[value] || 0) + 1;
-    });
-
-    return Object.entries(counts)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10);
-  }
-
-  function ageGroup(row) {
-    const age = num(row, 'ageNum');
-
-    if (age === null) return 'Not stated';
-    if (age < 25) return 'Under 25';
-    if (age < 35) return '25–34';
-    if (age < 45) return '35–44';
-    if (age < 55) return '45–54';
-
-    return '55+';
-  }
-
-  function options(id, values, first) {
-    const element = $(id);
-    const previousValue = element.value;
-
-    const uniqueValues = [...new Set(values)]
-      .filter(value => value && value !== 'Not stated')
-      .sort();
-
-    element.innerHTML = '';
-
-    const firstOption = document.createElement('option');
-    firstOption.value = '';
-    firstOption.textContent = first;
-    element.appendChild(firstOption);
-
-    uniqueValues.forEach(value => {
-      const option = document.createElement('option');
-      option.value = value;
-      option.textContent = value;
-      element.appendChild(option);
-    });
-
-    if (uniqueValues.includes(previousValue)) {
-      element.value = previousValue;
-    }
-  }
-
-  function filtered() {
-    return all.filter(row =>
-      (!$('fUser').value || label(row, 'user') === $('fUser').value) &&
-      (!$('fCountry').value || label(row, 'country') === $('fCountry').value) &&
-      (!$('fTool').value || label(row, 'tool') === $('fTool').value) &&
-      (!$('fAge').value || ageGroup(row) === $('fAge').value)
-    );
-  }
-
-  function chartCard(title, id) {
-    return `
-      <div class="chart">
-        <h3>${title}</h3>
-        <div class="canvas">
-          <canvas id="${id}"></canvas>
-        </div>
-      </div>
-    `;
-  }
-
-  function draw(id, title, entries, type = 'bar') {
-    const element = $(id);
-
-    if (!element || typeof Chart === 'undefined') return;
-
-    const chart = new Chart(element, {
-      type: type,
-      data: {
-        labels: entries.map(item => item[0]),
-        datasets: [{
-          label: title,
-          data: entries.map(item => item[1]),
-          backgroundColor: [
-            '#087f8c',
-            '#f0a35a',
-            '#6daaa5',
-            '#8296ad',
-            '#d38e80',
-            '#a7b46a',
-            '#8e82b7',
-            '#5c9cae'
-          ],
-          borderRadius: 5,
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: type === 'doughnut'
-          }
-        },
-        scales: type === 'doughnut' ? {} : {
-          y: { beginAtZero: true },
-          x: {
-            ticks: {
-              maxRotation: 30,
-              minRotation: 0
-            }
-          }
-        }
-      }
-    });
-
-    charts.push(chart);
-  }
-
-  function escapeHTML(value) {
-    return String(value ?? '')
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
-  }
-
-  function render() {
-    const rows = filtered();
-
-    const usageAverage = avg(rows, 'usage');
-    const productivityAverage = avg(rows, 'productivity');
-    const satisfactionAverage = avg(rows, 'satisfaction');
-
-    const kpis = [
-      ['Respondents', rows.length],
-      [
-        'Avg. daily AI use',
-        usageAverage === null ? '—' : usageAverage.toFixed(1) + ' h'
-      ],
-      [
-        'Avg. productivity',
-        productivityAverage === null ? '—' : productivityAverage.toFixed(1)
-      ],
-      [
-        'Avg. satisfaction',
-        satisfactionAverage === null ? '—' : satisfactionAverage.toFixed(1)
-      ]
-    ];
-
-    $('kpis').innerHTML = kpis.map(item => `
-      <div class="kpi">
-        <small>${item[0]}</small>
-        <strong>${item[1]}</strong>
-      </div>
-    `).join('');
-
-    charts.forEach(chart => chart.destroy());
-    charts = [];
-
-    $('charts').innerHTML =
-      chartCard('AI tools used', 'tools') +
-      chartCard('Main AI purposes', 'purposes') +
-      chartCard('Respondents by user type', 'users') +
-      chartCard('Average time saved by user type', 'saved') +
-      chartCard('Average productivity by AI tool', 'productivity') +
-      chartCard('Would recommend AI', 'recommend');
-
-    draw('tools', 'Respondents', group(rows, 'tool'));
-    draw('purposes', 'Respondents', group(rows, 'purpose'));
-    draw('users', 'Respondents', group(rows, 'user'));
-
-    draw(
-      'saved',
-      'Hours saved',
-      group(rows, 'user').map(([name]) => [
-        name,
-        avg(rows.filter(row => label(row, 'user') === name), 'time') ?? 0
-      ])
-    );
-
-    draw(
-      'productivity',
-      'Avg productivity',
-      group(rows, 'tool').map(([name]) => [
-        name,
-        avg(rows.filter(row => label(row, 'tool') === name), 'productivity') ?? 0
-      ])
-    );
-
-    const yes = rows.filter(row =>
-      String(row[key(row, 'recommend')] ?? '').trim().toLowerCase() === 'yes'
-    ).length;
-
-    draw(
-      'recommend',
-      'Responses',
-      [
-        ['Yes', yes],
-        ['Other', rows.length - yes]
-      ],
-      'doughnut'
-    );
-
-    const columns = Object.keys(rows[0] || {});
-
-    $('thead').innerHTML = columns.length
-      ? '<tr>' + columns.map(column =>
-          `<th>${escapeHTML(column.replaceAll('_', ' '))}</th>`
-        ).join('') + '</tr>'
-      : '';
-
-    const query = $('search').value.toLowerCase();
-
-    const shown = rows.filter(row =>
-      Object.values(row).some(value =>
-        String(value ?? '').toLowerCase().includes(query)
-      )
-    ).slice(0, 150);
-
-    $('tbody').innerHTML = shown.map(row =>
-      '<tr>' + columns.map(column =>
-        `<td>${escapeHTML(row[column])}</td>`
-      ).join('') + '</tr>'
-    ).join('');
-  }
-
-  // Common CSV loading function for automatic loading and manual upload.
-  function loadCSV(source, filename, isURL = false) {
-
-    if (typeof Papa === 'undefined') {
-      $('status').textContent =
-        'Error: CSV library could not load. Please refresh the page.';
-      return;
-    }
-
-    $('status').textContent = 'Loading ' + filename + '...';
-
-    const config = {
-      header: true,
-      skipEmptyLines: true,
-      dynamicTyping: false,
-
-      complete: result => {
-
-        if (result.errors && result.errors.length) {
-          console.warn('CSV parsing warnings:', result.errors);
-        }
-
-        all = result.data.filter(row =>
-          Object.values(row).some(value =>
-            String(value ?? '').trim()
-          )
-        );
-
-        if (!all.length) {
-          $('status').textContent = 'No data rows found in CSV.';
-          return;
-        }
-
-        options('fUser', all.map(row => label(row, 'user')), 'All user types');
-        options('fCountry', all.map(row => label(row, 'country')), 'All countries');
-        options('fTool', all.map(row => label(row, 'tool')), 'All tools');
-        options('fAge', all.map(row => ageGroup(row)), 'All ages');
-
-        $('status').textContent =
-          `Loaded ${all.length.toLocaleString()} rows from ${filename}`;
-
-        render();
-      },
-
-      error: error => {
-        $('status').textContent = 'CSV error: ' + error.message;
-        console.error('CSV loading error:', error);
-      }
-    };
-
-    if (isURL) {
-      Papa.parse(source, {
-        ...config,
-        download: true
-      });
+let data=[], chartInstances=[];
+function parseCSV(text){
+  const rows=[]; let row=[], field='', quoted=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i], next=text[i+1];
+    if(quoted){
+      if(c==='"' && next==='"'){field+='"';i++;}
+      else if(c==='"'){quoted=false;}
+      else field+=c;
     } else {
-      Papa.parse(source, config);
+      if(c==='"') quoted=true;
+      else if(c===','){row.push(field);field='';}
+      else if(c==='\n'){row.push(field);rows.push(row);row=[];field='';}
+      else if(c!=='\r') field+=c;
     }
   }
-
-  // Automatically load CSV from GitHub Pages.
-  loadCSV(
-    'data/clean/ai_usage_clean.csv',
-    'ai_usage_clean.csv',
-    true
-  );
-
-  // Manual CSV upload remains available.
-  $('file').addEventListener('change', event => {
-    const file = event.target.files[0];
-
-    if (file) {
-      loadCSV(file, file.name);
-    }
-  });
-
-  // Filter and search listeners.
-  ['fUser', 'fCountry', 'fTool', 'fAge'].forEach(id => {
-    $(id).addEventListener('change', render);
-  });
-
-  $('search').addEventListener('input', render);
-
-})();
-</script>
-
-</body>
-</html>
+  if(field.length || row.length){row.push(field);rows.push(row);}
+  if(!rows.length) return [];
+  const headers=rows.shift().map((h,i)=>i===0?h.replace(/^\uFEFF/,'').trim():h.trim());
+  return rows.filter(r=>r.some(v=>v.trim()!=='')).map(r=>Object.fromEntries(headers.map((h,i)=>[h,(r[i]??'').trim()])));
+}
+async function loadCleanCSV(){
+  const status=document.getElementById('status');
+  try{
+    status.textContent='Loading cleaned CSV…';
+    const response=await fetch('data/clean/ai_usage_clean.csv?cache='+Date.now(),{cache:'no-store'});
+    if(!response.ok) throw new Error('CSV request failed: HTTP '+response.status);
+    const csv=await response.text();
+    data=parseCSV(csv);
+    if(!data.length) throw new Error('CSV file is empty or could not be parsed.');
+    status.textContent=`Loaded ${data.length} cleaned rows from data/clean/ai_usage_clean.csv`;
+    initDashboard();
+  }catch(error){
+    console.error(error);
+    status.textContent='Could not load cleaned CSV. Check that data/clean/ai_usage_clean.csv exists in the published GitHub repository.';
+  }
+}
+function initDashboard(){
+const $=id=>document.getElementById(id);
+const palettes={teal:['#087f8c','#f97360','#2563eb','#f59e0b','#7c3aed','#10b981','#db2777','#64748b','#84cc16','#0ea5e9'],ocean:['#1d4ed8','#06b6d4','#0f766e','#60a5fa','#0891b2','#14b8a6','#4338ca','#38bdf8','#64748b','#a5f3fc'],vibrant:['#e11d48','#7c3aed','#2563eb','#f97316','#16a34a','#db2777','#0d9488','#ca8a04','#4f46e5','#64748b'],sunset:['#c2410c','#ea580c','#f59e0b','#be123c','#fb7185','#9333ea','#7c2d12','#f97316','#a16207','#64748b'],earth:['#166534','#a16207','#9f1239','#0f766e','#854d0e','#4d7c0f','#78716c','#9a3412','#3f6212','#475569']};let colors=palettes.teal;
+// Use the cleaned CSV loaded by loadCleanCSV(); do not replace it with embedded RAW data.
+function clean(v){return v===null||v===undefined?'':String(v).trim()}
+function canonical(v){let s=clean(v);let low=s.toLowerCase();const map={
+'chat gpt':'ChatGPT','chatgpt':'ChatGPT','google gemini':'Google Gemini','gemini':'Google Gemini','copilot':'Microsoft Copilot','microsoft copilot':'Microsoft Copilot','claude':'Claude',
+'bachelors':"Bachelor's","bachelor's degree":"Bachelor's",'ba/bsc':"Bachelor's",'masters':"Master's","master's degree":"Master's",'ma/msc':"Master's",'ph.d.':'PhD','ph.d':'PhD','undergrad':'Undergraduate','hs':'High School','high school':'High School'
+};return map[low]||s}
+function val(r,k){return clean(r[k])}
+function num(r,k){let s=val(r,k).replace(/[$,]/g,'').replace(/\s*hrs?$/i,'');if(!s)return null;let n=Number(s);return Number.isFinite(n)?n:null}
+function paidStatus(r){let n=num(r,'Monthly_AI_Cost');if(n===null)return 'Not stated';return n>0?'Paid':'Free'}
+function ageGroup(r){let n=num(r,'Age');if(n===null)return 'Not stated';if(n<=20)return '16–20';if(n<=25)return '21–25';if(n<=35)return '26–35';if(n<=50)return '36–50';return '51+'}
+function recommend(r){return canonical(val(r,'Would_Recommend'))||'Not stated'}
+function get(r,k){if(k==='User_Type')return canonical(val(r,k));if(k==='AI_Tool')return canonical(val(r,k));if(k==='Education_Level')return canonical(val(r,k));if(k==='Gender')return canonical(val(r,k));return canonical(val(r,k))||'Not stated'}
+function filtered(){return data.filter(r=>
+(!$('fUser').value||get(r,'User_Type')===$('fUser').value)&&
+(!$('fCountry').value||get(r,'Country')===$('fCountry').value)&&
+(!$('fTool').value||get(r,'AI_Tool')===$('fTool').value)&&
+(!$('fAge').value||ageGroup(r)===$('fAge').value)&&
+(!$('fEducation').value||get(r,'Education_Level')===$('fEducation').value)
+)}
+function setupSelect(id,values){let el=$(id),prev=el.value,first=el.options[0].outerHTML;el.innerHTML=first;[...new Set(values.filter(Boolean))].sort().forEach(v=>{let o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o)});if([...el.options].some(o=>o.value===prev))el.value=prev}
+function avg(rows,key){let a=rows.map(r=>num(r,key)).filter(n=>n!==null);return a.length?a.reduce((x,y)=>x+y,0)/a.length:null}
+function fmt(n,d=1){return n===null?'—':n.toFixed(d)}
+function tally(rows,fn){let m={};rows.forEach(r=>{let k=fn(r)||'Not stated';m[k]=(m[k]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1])}
+function card(title,value,sub){return `<article class="kpi"><small>${title}</small><strong>${value}</strong><span>${sub}</span></article>`}
+function renderKPIs(rows){
+let yes=rows.filter(r=>recommend(r)==='Yes').length, answered=rows.filter(r=>['Yes','No','Maybe'].includes(recommend(r))).length;
+let paid=rows.filter(r=>paidStatus(r)==='Paid').length;
+let students=rows.filter(r=>get(r,'User_Type').toLowerCase()==='student').length;
+let prof=rows.filter(r=>get(r,'User_Type').toLowerCase()==='professional').length;
+$('kpis').innerHTML=[
+card('Total Respondents',rows.length,'Count of User_ID'),
+card('Students / Professionals',students+' / '+prof,'Respondent count by user type'),
+card('Average Productivity',fmt(avg(rows,'Productivity_Score'),2)+' / 10','Mean productivity score'),
+card('Average Satisfaction',fmt(avg(rows,'Satisfaction_Score'),2)+' / 10','Mean satisfaction score'),
+card('Average Time Saved',fmt(avg(rows,'Time_Saved_Hours_Per_Week'),1)+' h','Hours saved per week'),
+card('Would Recommend',answered?((yes/answered)*100).toFixed(1)+'%':'—','Share of Yes among answered responses'),
+card('Paid Users',rows.length?((paid/rows.length)*100).toFixed(1)+'%':'—','Monthly AI cost greater than zero')
+].join('')
+}
+function cardChart(title,id,wide=false){return `<article class="chart ${wide?'wide':''}"><h3>${title}</h3><div class="canvas"><canvas id="${id}"></canvas></div></article>`}
+function draw(id,type,labels,datasets,horizontal=false,stacked=false){let el=$(id);if(!el)return;if(type!=='scatter'&&!labels.length)return;let ds=datasets.map((d,i)=>{const distinctBarColors=type==='bar'&&datasets.length===1;const fill=distinctBarColors?labels.map((_,j)=>colors[j%colors.length]):(d.backgroundColor||colors[i%colors.length]);const border=distinctBarColors?labels.map((_,j)=>colors[j%colors.length]):(d.borderColor||colors[i%colors.length]);return {...d,backgroundColor:fill,borderColor:border,borderWidth:type==='scatter'?1:0,borderRadius:type==='bar'?4:0,pointRadius:type==='scatter'?4:undefined}});chartInstances.push(new Chart(el,{type,data:type==='scatter'?{datasets:ds}:{labels,datasets:ds},options:{responsive:true,maintainAspectRatio:false,indexAxis:horizontal?'y':'x',plugins:{legend:{display:type==='doughnut'||datasets.length>1,position:'bottom'}},scales:type==='doughnut'?{}:type==='scatter'?{x:{title:{display:true,text:'AI usage hours per day'},grid:{display:false}},y:{title:{display:true,text:'Time saved hours per week'},beginAtZero:true}}:{x:{stacked,grid:{display:false}},y:{stacked,beginAtZero:true}}}}))}
+function renderCharts(rows){
+chartInstances.forEach(c=>c.destroy());chartInstances=[];
+$('charts').innerHTML=[
+cardChart('1. Students vs Professionals','userType'),
+cardChart('2. AI Tool Share','tool',true),
+cardChart('3. What AI Is Used For','purpose',true),
+cardChart('4. Tool by Purpose','toolPurpose',true),
+cardChart('5. AI Use vs Time Saved','useTime',true),
+cardChart('6. Productivity by Usage Band','productivityBand'),
+cardChart('7. Satisfaction by Tool','satisfaction',true),
+cardChart('8. Would Recommend by Tool','recommendTool',true),
+cardChart('9. Paid vs Free Users','paidFree'),
+cardChart('10. Respondents by Country','country',true)
+].join('');
+let userTypes=['Student','Professional'];
+draw('userType','doughnut',userTypes,[{label:'Respondents',data:userTypes.map(u=>rows.filter(r=>get(r,'User_Type').toLowerCase()===u.toLowerCase()).length),backgroundColor:[colors[0],colors[1]],borderColor:[colors[0],colors[1]] }]);
+function top(key,limit=12){return tally(rows,r=>get(r,key)).filter(x=>x[0]!=='Not stated').slice(0,limit)}
+function bar(id,key,limit=12){let a=top(key,limit);draw(id,'bar',a.map(x=>x[0]),[{label:'Respondents',data:a.map(x=>x[1])}],true)}
+bar('tool','AI_Tool',12);bar('purpose','AI_Purpose',12);
+// Tool by purpose: stacked counts for each purpose and tool
+let tools=top('AI_Tool',8).map(x=>x[0]), purposes=top('AI_Purpose',10).map(x=>x[0]);
+draw('toolPurpose','bar',purposes,tools.map((t,i)=>({label:t,data:purposes.map(p=>rows.filter(r=>get(r,'AI_Tool')===t&&get(r,'AI_Purpose')===p).length),backgroundColor:colors[i%colors.length]})),true,true);
+// Scatter plot of AI hours per day and time saved per week, split by user type
+let scatterSets=['Student','Professional'].map((u,i)=>({label:u,data:rows.filter(r=>get(r,'User_Type').toLowerCase()===u.toLowerCase()).map(r=>({x:num(r,'AI_Usage_Hours_Per_Day'),y:num(r,'Time_Saved_Hours_Per_Week')})).filter(p=>p.x!==null&&p.y!==null),backgroundColor:colors[i]}));
+draw('useTime','scatter',[],scatterSets);
+// Productivity by task-specified usage bands
+function usageBand(r){let n=num(r,'AI_Usage_Hours_Per_Day');if(n===null)return 'Not stated';if(n<1)return 'under 1 h';if(n<2)return '1–2 h';if(n<4)return '2–4 h';return '4 h+'}
+let bands=['under 1 h','1–2 h','2–4 h','4 h+'];draw('productivityBand','bar',bands,[{label:'Average productivity',data:bands.map(b=>avg(rows.filter(r=>usageBand(r)===b),'Productivity_Score')||0)}]);
+let toolList=top('AI_Tool',10).map(x=>x[0]);draw('satisfaction','bar',toolList,[{label:'Average satisfaction',data:toolList.map(t=>avg(rows.filter(r=>get(r,'AI_Tool')===t),'Satisfaction_Score')||0)}],true);
+let answers=['Yes','No','Maybe','Not stated'];draw('recommendTool','bar',toolList,answers.map((a,i)=>({label:a,data:toolList.map(t=>rows.filter(r=>get(r,'AI_Tool')===t&&recommend(r)===a).length),backgroundColor:colors[i%colors.length]})),true,true);
+let paidLabels=['Paid','Free'];draw('paidFree','bar',paidLabels,[{label:'Average productivity',data:paidLabels.map(p=>avg(rows.filter(r=>paidStatus(r)===p),'Productivity_Score')||0)},{label:'Average satisfaction',data:paidLabels.map(p=>avg(rows.filter(r=>paidStatus(r)===p),'Satisfaction_Score')||0)}]);
+bar('country','Country',12);
+}
+function esc(s){return String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;")}
+function renderTable(rows){let cols=Object.keys(rows[0]||{});$('thead').innerHTML=cols.length?'<tr>'+cols.map(c=>'<th>'+esc(c.replaceAll('_',' '))+'</th>').join('')+'</tr>':'';let q=$('search').value.toLowerCase();let matches=rows.filter(r=>!q||Object.values(r).some(v=>clean(v).toLowerCase().includes(q)));$('tbody').innerHTML=matches.slice(0,150).map(r=>'<tr>'+cols.map(c=>'<td>'+esc(r[c])+'</td>').join('')+'</tr>').join('');$('tableCount').textContent=`${matches.length} matching responses; showing up to 150.`}
+function render(){let rows=filtered();renderKPIs(rows);renderCharts(rows);renderTable(rows);$('status').textContent=`Showing ${rows.length} of ${data.length} survey records. All slicers update every KPI, chart and table.`}
+[['fUser','User_Type'],['fCountry','Country'],['fTool','AI_Tool'],['fAge','Age']].forEach(([id,key])=>{let vals=data.map(r=>key==='Age'?ageGroup(r):get(r,key));setupSelect(id,vals)});
+setupSelect('fEducation', data.map(r=>get(r,'Education_Level')));
+['fUser','fCountry','fTool','fAge','fEducation'].forEach(id=>$(id).addEventListener('change',render));
+$('search').addEventListener('input',()=>renderTable(filtered()));
+$('colorTheme').addEventListener('change',()=>{colors=palettes[$('colorTheme').value]||palettes.teal;render()});
+$('reset').addEventListener('click',()=>{['fUser','fCountry','fTool','fAge','fEducation'].forEach(id=>$(id).value='');$('search').value='';render()});
+render();
+}
+loadCleanCSV();
+</script></body></html>
